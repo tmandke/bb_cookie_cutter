@@ -15,5 +15,6 @@ gem "jquery-rails"
 
 # To use debugger
 # gem 'debugger'
+gem 'backbone-on-rails'
 gem 'rspec-rails'
 
