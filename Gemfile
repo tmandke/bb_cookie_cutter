@@ -14,7 +14,14 @@ gem "jquery-rails"
 # your gem to rubygems.org.
 
 # To use debugger
-# gem 'debugger'
 gem 'backbone-on-rails'
 gem 'rspec-rails'
 
+group :development do
+  gem 'debugger'
+end
+
+group :assets do
+  gem 'therubyracer'
+  gem 'uglifier'
+end
