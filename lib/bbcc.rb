@@ -1,11 +1,23 @@
 require "bbcc/coffee_generator"
-class BBCC
-  def self.to_coffee
-    CoffeeGenerator.build do |g|
-      g.puts "hell ya"
-      g.if "this works" do |g|
-        g.puts "I am leaving for work"
+module BBCC
+  ExtendsModel        = "Backbone.RelationalModel"
+  ExtendsCollection   = "Backbone.Collection"
+
+  module ClassMethods
+
+    def coffee_name
+      @@coffee_name ||= ("BBCC::"+self.name).gsub("::",  ".")
+    end
+
+    def to_coffee
+      g = CoffeeGenerator.new
+      g.model self.coffee_name do
+        g.attribute :url do
+          g.define_bound_function do
+            g.puts "alert 'Hell Yes Url can be called'"
+          end
+        end
       end
-    end.string
+    end
   end
 end

@@ -1,2 +1,2 @@
 puts "initializing bbcc"
-#Sprockets::Base.send :include, BbCookieCutter::Sprockets
+ActiveRecord::Base.send :extend, BbCookieCutter

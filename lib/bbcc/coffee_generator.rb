@@ -1,4 +1,4 @@
-class BBCC
+module BBCC
   class CoffeeGenerator
     attr_accessor :coffee, :indent_level
     INDENT_WIDTH = 2
@@ -12,19 +12,19 @@ class BBCC
       @coffee = StringIO.new
     end
 
+    def write string
+      @coffee << (" "*@indent_level) << string
+    end
+
     def puts string
-      @coffee << (" "*@indent_level) << string << "\n"
+      write "#{string}\n"
     end
 
-    def next_indent
-      @indent_level + INDENT_WIDTH
-    end
-
-    def if exp
-      g = self.class.new(next_indent)
-      yield g
-      puts "if #{exp}"
-      @coffee << g.string
+    def indent cmd
+      puts cmd
+      @indent_level += INDENT_WIDTH
+      yield
+      @indent_level -= INDENT_WIDTH
       self
     end
 
@@ -32,10 +32,44 @@ class BBCC
       @coffee.string
     end
 
-    def self.build ind = 0
-      g = self.new(ind)
-      yield g
-      g
+    def class name, extends, &block
+      if @indent_level == 0
+        #@nameSpaceManager.add name
+        indent "class #{name} extend #{}", &block
+      else
+        raise "Sorry, indented classes not supported yet"
+      end
+    end
+
+    def model name, &block
+      self.class name, BBCC::ExtendsModel, &block
+    end
+
+    def collection name, &block
+      self.class name, BBCC::ExtendsCollection, &block
+    end
+
+    def attribute name, &block
+      raise "only supports attributes with no spaces" if name.to_s.split.length != 1
+      write "#{name}: "
+      yield
+      self
+    end
+
+    def define_bound_function *params, &block
+      indent "(#{params.join(", ")}) =>", &block
+    end
+
+    def define_unbound_function *params, &block
+      indent "(#{params.join(", ")}) ->", &block
+    end
+
+    def if exp, &block
+      indent "if #{exp}", &block
+    end
+
+    def else &block
+      indent "else", &block
     end
   end
 end
