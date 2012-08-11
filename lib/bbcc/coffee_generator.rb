@@ -1,58 +1,54 @@
 module BBCC
   class CoffeeGenerator
     attr_accessor :coffee, :indent_level
-    INDENT_WIDTH = 2
+
+    class IndentCache
+      INDENT_WIDTH = 2
+      @@cache = []
+      def self.[] i
+        @@cache[i] = " "*(i*INDENT_WIDTH) if @@cache[i].nil?
+        @@cache[i]
+      end
+    end
 
     def initialize ind = 0
       @coffee = StringIO.new
       @indent_level = ind
     end
 
-    def clear
-      @coffee = StringIO.new
+    def string
+      @coffee.string
     end
 
     def write string
-      @coffee << (" "*@indent_level) << string
+      @coffee << indent_str << string
     end
 
     def puts string
       write "#{string}\n"
     end
 
-    def indent cmd
-      puts cmd
-      @indent_level += INDENT_WIDTH
-      yield
-      @indent_level -= INDENT_WIDTH
+    def indent cmd = nil
+      puts cmd if cmd
+      @indent_level += 1
+      yield if block_given?
+      @indent_level -= 1
       self
     end
 
-    def string
-      @coffee.string
-    end
-
-    def class name, extends, &block
+    def class name, extends="", &block
       if @indent_level == 0
         #@nameSpaceManager.add name
-        indent "class #{name} extend #{}", &block
+        indent "class #{name}#{" extends #{extends}" unless extends.blank?}", &block
       else
         raise "Sorry, indented classes not supported yet"
       end
     end
 
-    def model name, &block
-      self.class name, BBCC::ExtendsModel, &block
-    end
-
-    def collection name, &block
-      self.class name, BBCC::ExtendsCollection, &block
-    end
-
-    def attribute name, &block
+    def property name
       raise "only supports attributes with no spaces" if name.to_s.split.length != 1
       write "#{name}: "
-      yield
+      yield if block_given?
       self
     end
 
@@ -65,11 +61,18 @@ module BBCC
     end
 
     def if exp, &block
+      raise "if statements need a block" unless block_given?
       indent "if #{exp}", &block
     end
 
     def else &block
+      raise "else statements need a block" unless block_given?
       indent "else", &block
+    end
+
+    protected
+    def indent_str
+      IndentCache[@indent_level]
     end
   end
 end
