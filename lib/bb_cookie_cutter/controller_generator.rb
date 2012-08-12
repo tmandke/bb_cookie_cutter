@@ -11,7 +11,7 @@ class BbCookieCutter::ControllerGenerator
   end
 
   def self.controller_name model
-    "BbCookieCutter::#{model.name.pluralize}Controller"
+    "Bbcc::#{model.name.pluralize}Controller"
   end
 
   def self.build model

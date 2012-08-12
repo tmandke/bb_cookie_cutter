@@ -1,3 +1,4 @@
+require "bbcc"
 require "bb_cookie_cutter/engine"
 require "bb_cookie_cutter/coffee_generator"
 require "bb_cookie_cutter/backbone_model_generator"
