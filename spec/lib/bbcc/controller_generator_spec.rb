@@ -1,10 +1,10 @@
 require "spec_helper"
 
-describe BBCC::ControllerGenerator do
+describe BbCookieCutter::ControllerGenerator do
 
   describe "#index" do
     before :all do
-      @subject = BBCC::ControllerGenerator.create_class "BBCC::Leroy::Jenkins", ApplicationController
+      @subject = BbCookieCutter::ControllerGenerator.create_class "BBCC::Leroy::Jenkins", ApplicationController
     end
 
     it "should create full chain of constants" do
@@ -15,8 +15,10 @@ describe BBCC::ControllerGenerator do
       BBCC::Leroy::Jenkins.should be_an_instance_of(Class)
     end
 
-    it "should raise error if sameclass is built twice" do
-      lambda { BBCC::ControllerGenerator.create_class "BBCC::Leroy::Jenkins", ApplicationController }.should raise_error
+    it "should not error if sameclass is built twice and replace the class" do
+      klass = BBCC::Leroy::Jenkins
+      lambda { BbCookieCutter::ControllerGenerator.create_class "BBCC::Leroy::Jenkins", ApplicationController }.should_not raise_error
+      BBCC::Leroy::Jenkins.should_not eq(klass)
     end
 
     it "should be a ApplicationController" do
@@ -26,10 +28,10 @@ describe BBCC::ControllerGenerator do
 
   describe "#build" do
     before :all do
-      @subject = BBCC::ControllerGenerator.build(Post).new
+      @subject = BbCookieCutter::ControllerGenerator.build(Post).new
     end
 
-    it "should build a controller with the name BBCC::PostsController" do
+    it "should build a controller with the name BbCookieCutter::PostsController" do
       @subject.should be_a ApplicationController
     end
 

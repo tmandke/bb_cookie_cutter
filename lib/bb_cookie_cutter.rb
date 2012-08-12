@@ -1,8 +1,9 @@
 require "bb_cookie_cutter/engine"
-require "bbcc/coffee_generator"
-require "bbcc/backbone_model_generator"
-require "bbcc/backbone_collection_generator"
-require "bbcc/controller_generator"
+require "bb_cookie_cutter/coffee_generator"
+require "bb_cookie_cutter/backbone_model_generator"
+require "bb_cookie_cutter/backbone_collection_generator"
+require "bb_cookie_cutter/controller_generator"
+require "bb_cookie_cutter/routes_generator"
 
 module BbCookieCutter
   @@to_backbonify = []
@@ -13,7 +14,13 @@ module BbCookieCutter
 
   def self.build_controllers
     @@to_backbonify.each do |model|
-      BBCC::ControllerGenerator.build model
+      BbCookieCutter::ControllerGenerator.build model
+    end
+  end
+
+  def self.build_routes router
+    @@to_backbonify.each do |model|
+      BbCookieCutter::RoutesGenerator.build model, router
     end
   end
 end

@@ -1,4 +1,4 @@
-module BBCC
+module BbCookieCutter
   class CoffeeGenerator
     attr_accessor :coffee, :indent_level
 

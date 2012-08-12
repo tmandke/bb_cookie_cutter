@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe BBCC::CoffeeGenerator do
+describe BbCookieCutter::CoffeeGenerator do
   before do
-    @g = BBCC::CoffeeGenerator.new
+    @g = BbCookieCutter::CoffeeGenerator.new
   end
   describe "#initialize" do
     it "should create itself with the correct number of indents" do
-      BBCC::CoffeeGenerator.new.indent_level.should eq(0)
-      BBCC::CoffeeGenerator.new(1).indent_level.should eq(1)
-      BBCC::CoffeeGenerator.new(10).indent_level.should eq(10)
+      BbCookieCutter::CoffeeGenerator.new.indent_level.should eq(0)
+      BbCookieCutter::CoffeeGenerator.new(1).indent_level.should eq(1)
+      BbCookieCutter::CoffeeGenerator.new(10).indent_level.should eq(10)
     end
   end
 

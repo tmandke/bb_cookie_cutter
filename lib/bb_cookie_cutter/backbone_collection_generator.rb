@@ -1,5 +1,5 @@
-module BBCC
-  class BackboneModelGenerator < CoffeeGenerator
+module BbCookieCutter
+  class BackboneCollectionGenerator < CoffeeGenerator
     attr_accessor :klass
 
     def initialize klass
