@@ -1,4 +1,3 @@
-require "bbcc/coffee_generator"
 module BBCC
   ExtendsModel        = "Backbone.RelationalModel"
   ExtendsCollection   = "Backbone.Collection"
