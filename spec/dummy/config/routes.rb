@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
 
-  mount BbCookieCutter::Engine => "/bb_cookie_cutter"
+  mount BbCookieCutter::Engine => "/bbcc"
 end

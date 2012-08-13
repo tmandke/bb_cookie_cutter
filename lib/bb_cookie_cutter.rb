@@ -24,4 +24,8 @@ module BbCookieCutter
       BbCookieCutter::RoutesGenerator.build model, router
     end
   end
+
+  def self.build_backbone
+    puts ("*"*30) + "here123"
+  end
 end
