@@ -1,3 +1,1 @@
-unless Rails.env.test?
-  BbCookieCutter.backbonify Post
-end
+BbCookieCutter.backbonify Post
