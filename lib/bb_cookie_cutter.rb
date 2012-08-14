@@ -9,8 +9,12 @@ require "bb_cookie_cutter/routes_generator"
 module BbCookieCutter
   @@to_backbonify = []
   def self.backbonify *models
-    @@to_backbonify = models
+    @@to_backbonify = models if models.any?
+  end
+
+  def self.build_all
     build_controllers
+    build_backbone
   end
 
   def self.build_controllers
@@ -26,6 +30,14 @@ module BbCookieCutter
   end
 
   def self.build_backbone
-    puts ("*"*30) + "here123"
+    generator = CoffeeGenerator.new
+    @@to_backbonify.each do |model|
+      BbCookieCutter::BackboneModelGenerator.new(model, generator).build
+      BbCookieCutter::BackboneCollectionGenerator.new(model, generator).build
+    end
+
+    f = File.open("#{BbCookieCutter::Engine.root}/app/assets/javascripts/bbcc/generated.js.coffee", "w")
+    f.write generator.string
+    f.close
   end
 end
