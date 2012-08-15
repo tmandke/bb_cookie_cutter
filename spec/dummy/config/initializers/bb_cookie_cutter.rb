@@ -1,1 +1,1 @@
-BbCookieCutter.backbonify Post
+BbCookieCutter.backbonify Post, User

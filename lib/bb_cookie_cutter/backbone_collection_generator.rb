@@ -2,6 +2,10 @@ module BbCookieCutter
   class BackboneCollectionGenerator
     attr_accessor :klass, :coffee
 
+    def self.collection_name klass
+      "Bbcc.Collections.#{klass.name.gsub "::", "."}"
+    end
+
     def path
       "\"#{BbCookieCutter::Engine.routes.url_helpers.send "#{@klass.name.pluralize.downcase}_path"}\""
     end
@@ -13,10 +17,11 @@ module BbCookieCutter
 
     def build
       @coffee.puts "# Backbone Collection for #{klass.name}"
-      @coffee.class "Bbcc.#{klass.name.gsub "::", "."}", "Bbcc.Collection"
-      @coffee.property :url do
-        @coffee.define_bound_function do
-          @coffee.puts path
+      @coffee.class self.class.collection_name(klass), "Bbcc.Collection" do
+        @coffee.property :url do
+          @coffee.define_bound_function do
+            @coffee.puts path
+          end
         end
       end
 

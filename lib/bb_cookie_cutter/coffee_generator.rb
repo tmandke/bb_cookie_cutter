@@ -21,7 +21,12 @@ module BbCookieCutter
     end
 
     def write string
-      @coffee << indent_str << string
+      if @ignore_indents_next
+        @ignore_indents_next = false
+      else
+        @coffee << indent_str
+      end
+      @coffee << string
     end
 
     def puts string
@@ -48,6 +53,7 @@ module BbCookieCutter
     def property name
       raise "only supports attributes with no spaces" if name.to_s.split.length != 1
       write "#{name}: "
+      @ignore_indents_next = true
       yield if block_given?
       self
     end
@@ -68,6 +74,46 @@ module BbCookieCutter
     def else &block
       raise "else statements need a block" unless block_given?
       indent "else", &block
+    end
+
+    def coffee_it item
+      if item.is_a? Array
+        array item
+      elsif item.is_a? Hash
+        hash item
+      elsif item.is_a?(String) || item.is_a?(Symbol)
+        puts "\"#{item}\""
+      else
+        puts item.to_s
+      end
+    end
+
+    def array arr
+      indent "[" do
+        arr.each do | item |
+          if block_given?
+            yield item
+          else
+            coffee_it item
+          end
+        end
+      end
+      puts "]"
+    end
+
+    def hash hash
+      indent "{" do
+        hash.each do | key, item |
+          if block_given?
+            yield key, item
+          else
+            property key do
+              coffee_it item
+            end
+          end
+        end
+      end
+      puts "}"
     end
 
     protected
