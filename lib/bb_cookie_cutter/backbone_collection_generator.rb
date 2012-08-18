@@ -3,7 +3,7 @@ module BbCookieCutter
     attr_accessor :klass, :coffee
 
     def self.collection_name klass
-      "Bbcc.Collections.#{klass.name.gsub "::", "."}"
+      "Bbcc.Collections.#{klass.name.gsub("::", ".").pluralize}"
     end
 
     def path
@@ -17,7 +17,10 @@ module BbCookieCutter
 
     def build
       @coffee.puts "# Backbone Collection for #{klass.name}"
-      @coffee.class self.class.collection_name(klass), "Bbcc.Collection" do
+      @coffee.class self.class.collection_name(klass), "BbCookieCutter.Collection" do
+        @coffee.property :model do
+          @coffee.puts BackboneModelGenerator.model_name(@klass)
+        end
         @coffee.property :url do
           @coffee.define_bound_function do
             @coffee.puts path

@@ -11,13 +11,43 @@ module BbCookieCutter
       end
     end
 
+    class NamespaceManager
+      @namespaces
+      def initialize
+        @namespaces = {}
+      end
+      def add str
+        str.split(".").inject(@namespaces){|namespaces, part|
+          puts namespaces
+          puts part
+          namespaces[part] ||= {}
+          namespaces[part]
+        }
+      end
+      def string
+        if @namespaces.keys.any?
+          c = CoffeeGenerator.new
+          puts @namespaces
+          @namespaces.each do |key, val|
+            c.write "window.#{key} = "
+            c.coffee_it val
+            c.puts ""
+          end
+          c.string
+        else
+          ""
+        end
+      end
+    end
+
     def initialize ind = 0
       @coffee = StringIO.new
       @indent_level = ind
+      @namespace_manager = NamespaceManager.new
     end
 
     def string
-      @coffee.string
+      @namespace_manager.string + @coffee.string
     end
 
     def write string
@@ -43,7 +73,7 @@ module BbCookieCutter
 
     def class name, extends="", &block
       if @indent_level == 0
-        #@nameSpaceManager.add name
+        @namespace_manager.add name
         indent "class #{name}#{" extends #{extends}" unless extends.blank?}", &block
       else
         raise "Sorry, indented classes not supported yet"

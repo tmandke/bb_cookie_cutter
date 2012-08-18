@@ -13,9 +13,10 @@ module BbCookieCutter
 
     def build
       @coffee.puts "# Backbone Model for #{klass.name}"
-      @coffee.class self.class.model_name(klass), "Bbcc.Model" do
+      @coffee.class self.class.model_name(klass), "BbCookieCutter.Model" do
         build_associations
       end
+      @coffee.puts "#{self.class.model_name(klass)}.setup()"
 
       @coffee.puts ""
     end
