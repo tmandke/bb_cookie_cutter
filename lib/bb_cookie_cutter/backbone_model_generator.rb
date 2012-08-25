@@ -32,33 +32,46 @@ module BbCookieCutter
 
     def has_many rel
       @coffee.puts "# has_many #{rel.klass}"
-      @coffee.hash({
-        type: "HasMany",
-        key: rel.name,
-        relatedModel: BackboneModelGenerator.model_name(rel.klass),
-        collectionType: BackboneCollectionGenerator.collection_name(rel.klass),
-        reverseRelation: {
-          key: rel.foreign_key
-        }
-      })
+
+      # disable through relations
+      unless rel.through_reflection
+        @coffee.hash({
+          type: "HasMany",
+          key: rel.name,
+          relatedModel: BackboneModelGenerator.model_name(rel.klass),
+          collectionType: BackboneCollectionGenerator.collection_name(rel.klass),
+          reverseRelation: {
+            key: rel.foreign_key
+          }
+        })
+      end
     end
 
     def has_one rel
       @coffee.puts "# has_one #{rel.klass}"
-      @coffee.hash({
-        type:             "HasOne",
-        key:              rel.name,
-        relatedModel:     BackboneModelGenerator.model_name(rel.klass)
-      })
+
+      # disable through relations
+      unless rel.through_reflection
+        @coffee.hash({
+          type:             "HasOne",
+          key:              rel.name,
+          relatedModel:     BackboneModelGenerator.model_name(rel.klass),
+          reverseRelation: {
+            key: rel.foreign_key
+          }
+        })
+      end
     end
 
     def belongs_to rel
       @coffee.puts "# belongs_to #{rel.klass}"
-      @coffee.hash({
-        type:             "HasOne",
-        key:              rel.name,
-        relatedModel:     BackboneModelGenerator.model_name(rel.klass)
-      })
+      # disabling this because this will not work
+      # need to comeup with a way that belongs to will work better
+      #@coffee.hash({
+      #  type:             "HasOne",
+      #  key:              rel.name,
+      #  relatedModel:     BackboneModelGenerator.model_name(rel.klass)
+      #})
     end
   end
 end
